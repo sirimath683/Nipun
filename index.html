@@ -127,6 +127,42 @@
             line-height: 1.8;
         }
 
+        /* --- New Services Styling --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .service-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 20px 10px;
+            border-radius: 20px;
+            transition: 0.4s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .service-card i {
+            font-size: 24px;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+        .service-card span {
+            font-size: 12px;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+        .service-card:hover {
+            background: rgba(0, 210, 255, 0.08);
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.1);
+        }
+        /* --------------------------- */
+
         .section-tag { font-size: 11px; font-weight: 800; letter-spacing: 4px; color: var(--primary); text-transform: uppercase; margin: 35px 0 20px; display: block; opacity: 0.8; }
 
         /* Buttons & Channels */
@@ -190,6 +226,26 @@
             Software & Web Developer | Graphic Designer | Cyber Security Enthusiast. Passionate about innovation and building digital solutions.
         </div>
 
+        <span class="section-tag reveal">Premium Services</span>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <i class="fas fa-bullhorn"></i>
+                <span>Channel Promote</span>
+            </div>
+            <div class="service-card reveal">
+                <i class="fas fa-rocket"></i>
+                <span>Social Boost</span>
+            </div>
+            <div class="service-card reveal">
+                <i class="fas fa-pen-nib"></i>
+                <span>Novels Web</span>
+            </div>
+            <div class="service-card reveal">
+                <i class="fas fa-microchip"></i>
+                <span>Digital Services</span>
+            </div>
+        </div>
+
         <span class="section-tag reveal">Official Channels</span>
 
         <div class="btn-list">
@@ -197,8 +253,8 @@
                 <div class="channel-content">
                     <i class="fab fa-whatsapp"></i>
                     <div>
-                        <span class="name">Official Channel 01</span>
-                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span> Updates</span>
+                        <span class="name">කතංග මුල සිට ✍️🖤</span>
+                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span>790+</span>
                     </div>
                 </div>
                 <i class="fas fa-arrow-right"></i>
@@ -208,8 +264,8 @@
                 <div class="channel-content">
                     <i class="fab fa-whatsapp"></i>
                     <div>
-                        <span class="name">Official Channel 02</span>
-                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span> Stay Connected</span>
+                        <span class="name">හොල්මන් විඩියෝ</span>
+                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span>40k</span>
                     </div>
                 </div>
                 <i class="fas fa-arrow-right"></i>
@@ -273,7 +329,7 @@
             </button>
         </div>
 
-        <div class="footer-logo reveal">© NIPUN MALINDA</div>
+        <div class="footer-logo reveal">© NIPUN</div>
     </div>
 
     <script>
@@ -367,9 +423,9 @@
             const message = document.getElementById('userMessage').value;
             const myNumber = "94789204088";
             if (!name || !message) { alert("Please fill all fields!"); return; }
-            const finalMsg = `*New Question from Portfolio!*%0A%0A*Name:* ${name}%0A*Message:* ${message}`;
+            const finalMsg = `*New Question from සිරිමත් බබා SYSTEM!*%0A%0A*Name:* ${name}%0A*Message:* ${message}`;
             window.open(`https://wa.me/${myNumber}?text=${finalMsg}`, '_blank');
         }
     </script>
 </body>
-                </html>
+    </html>
