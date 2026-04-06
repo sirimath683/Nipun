@@ -17,7 +17,16 @@
             --text-secondary: #94a3b8;
         }
 
-        /* Sexy Scrollbar */
+        /* Canvas for Animation */
+        #snow-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb {
@@ -38,6 +47,7 @@
             min-height: 100vh;
             padding: 80px 20px;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* Preloader */
@@ -72,8 +82,8 @@
         .container {
             width: 100%;
             max-width: 540px;
-            background: rgba(12, 12, 16, 0.6);
-            backdrop-filter: blur(30px);
+            background: rgba(12, 12, 16, 0.4);
+            backdrop-filter: blur(25px);
             border: 1px solid var(--border);
             padding: 50px 40px;
             border-radius: 40px;
@@ -81,6 +91,8 @@
             opacity: 0;
             transform: scale(0.9) translateY(40px);
             transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 10;
         }
 
         .container.loaded { opacity: 1; transform: scale(1) translateY(0); }
@@ -102,9 +114,20 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         h1 { font-family: 'Orbitron', sans-serif; font-size: 28px; margin-bottom: 15px; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .personal-info { font-size: 14px; color: var(--text-secondary); margin-bottom: 40px; }
+        .personal-info { font-size: 14px; color: var(--text-secondary); margin-bottom: 30px; }
 
-        .section-tag { font-size: 11px; font-weight: 800; letter-spacing: 4px; color: var(--primary); text-transform: uppercase; margin: 40px 0 25px; display: block; opacity: 0.8; }
+        .skill-box {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+            line-height: 1.8;
+        }
+
+        .section-tag { font-size: 11px; font-weight: 800; letter-spacing: 4px; color: var(--primary); text-transform: uppercase; margin: 35px 0 20px; display: block; opacity: 0.8; }
 
         /* Buttons & Channels */
         .btn-list { display: flex; flex-direction: column; gap: 15px; }
@@ -124,7 +147,7 @@
 
         /* Contact Form */
         .contact-box { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); padding: 30px; border-radius: 30px; margin-top: 50px; text-align: left; }
-        .contact-box h3 { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--primary); margin-bottom: 20px; text-align: center; letter-spacing: 2px; }
+        .contact-box h3 { font-family: 'Orbitron', sans-serif; font-size: 15px; color: var(--primary); margin-bottom: 20px; text-align: center; letter-spacing: 2px; }
         .input-group { margin-bottom: 15px; }
         .input-group input, .input-group textarea {
             width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border);
@@ -142,6 +165,8 @@
 </head>
 <body>
 
+    <canvas id="snow-canvas"></canvas>
+
     <div id="loader">
         <div class="loading-text">NIPUN</div>
         <div class="progress-container"><div class="progress-bar"></div></div>
@@ -155,7 +180,14 @@
 
         <div class="reveal">
             <h1>Nipun Malinda Bandara</h1>
-            <p class="personal-info">Ampara, Sri Lanka • Software & Web Developer</p>
+            <p class="personal-info">
+                Ampara, Sri Lanka • 19+ Years <br>
+                <a href="tel:+94789204088" style="color: var(--primary); text-decoration: none;"><i class="fas fa-phone-alt"></i> &nbsp;+94 78 920 4088</a>
+            </p>
+        </div>
+
+        <div class="skill-box reveal">
+            Software & Web Developer | Graphic Designer | Cyber Security Enthusiast. Passionate about innovation and building digital solutions.
         </div>
 
         <span class="section-tag reveal">Official Channels</span>
@@ -165,8 +197,8 @@
                 <div class="channel-content">
                     <i class="fab fa-whatsapp"></i>
                     <div>
-                        <span class="name">කතංග මුල සිට ✍️🖤</span>
-                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span>795+</span>
+                        <span class="name">Official Channel 01</span>
+                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span> Updates</span>
                     </div>
                 </div>
                 <i class="fas fa-arrow-right"></i>
@@ -176,8 +208,8 @@
                 <div class="channel-content">
                     <i class="fab fa-whatsapp"></i>
                     <div>
-                        <span class="name">හොල්මන් විඩියෝ</span>
-                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span>40k+</span>
+                        <span class="name">Official Channel 02</span>
+                        <span style="font-size: 11px; color: var(--text-secondary);"><span class="dot"></span> Stay Connected</span>
                     </div>
                 </div>
                 <i class="fas fa-arrow-right"></i>
@@ -245,6 +277,68 @@
     </div>
 
     <script>
+        // Snowfall/Particles Animation Logic
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y > canvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.fillStyle = `rgba(0, 210, 255, ${this.opacity})`;
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = '#00d2ff';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+
+        // Page Logic
         window.addEventListener('load', function() {
             setTimeout(() => {
                 document.getElementById('loader').style.opacity = '0';
@@ -272,15 +366,10 @@
             const name = document.getElementById('userName').value;
             const message = document.getElementById('userMessage').value;
             const myNumber = "94789204088";
-
-            if (!name || !message) {
-                alert("Please fill all fields!");
-                return;
-            }
-
+            if (!name || !message) { alert("Please fill all fields!"); return; }
             const finalMsg = `*New Question from Portfolio!*%0A%0A*Name:* ${name}%0A*Message:* ${message}`;
             window.open(`https://wa.me/${myNumber}?text=${finalMsg}`, '_blank');
         }
     </script>
 </body>
-    </html>
+                </html>
